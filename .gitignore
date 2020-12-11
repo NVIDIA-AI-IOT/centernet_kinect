@@ -1,0 +1,11 @@
+# ignore pushing the pytoch saved model
+*.pth
+
+# igont the python cache files
+*__pycache__*
+
+# ignore data images
+annotation_json/*.png
+
+# ignore virtual enviornment
+venv*
