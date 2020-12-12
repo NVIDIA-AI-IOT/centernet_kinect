@@ -56,6 +56,7 @@ We will discuss data collection and annotation in this section<br/>
 ### 1. Data collection
 - Setup **JSON_ANNOTATION_PATH** and **SAVE_DATASET_PATH** in *pipeline/constants.py* file 
   - **SAVE_DATASET_PATH** setups the location to save the dataset. here is how the dataset directory hierarchy is setup
+  by defaul it is set to *PATH/TO/PROJ/annotation_json/*
   ```bash
   data
     ├── annotation
@@ -65,7 +66,8 @@ We will discuss data collection and annotation in this section<br/>
     └── rgb_image
   ```
   - **JSON_ANNOTATION_PATH** setups the location to store the annotation json files to train the model (i.e train.json, val.json)
-  these files will be created after parsing the annotation (.xml) files 
+  these files will be created after parsing the annotation (.xml) files.
+  by defaul it is set to *PATH/TO/PROJ/annotation_json/*
   ```bash
   {"img_path": "/path/to/image.png",
   "chw": [1, 576, 640],
@@ -84,10 +86,25 @@ labelImg
 <img src="reame_files/lableImg.png" alt="landing graphic" height="200px"/>
 </p>
 
-- When finished with annotating the data you need to parse the Pascal VOC format and create json files containging annoation information. run *parse_pascal.py* to create 
+- When finished with annotating the data you need to parse the Pascal VOC format and create json files containging annoation information. run *pipeline/parse_pascal.py* to create 
   - label_map.json
   - train.json
   - val.json
 
 <a name="train_model"></a>
 ## Train Model
+
+Having the dataset ready We need to train the model (it is recomended to collect and annotate over 3k images for better performance). <br/>
+
+### 1. setup training parameters
+- **CHECKPOINT_PATH** the path to save the model checkpoints (default *PATH/TO/PROJ/checkpoint)
+- You can set the to either train with only depth images or with ir and depth fused images (*setup in pipeline/constants.py*)
+  - depth input images: image size (3, 300, 300) dublicate the image for all the 3 input channels 
+  - fused input images: channel1 ir images, channel 2 depth image, channel 3 mean of the first 2 channels
+- loss functions: you can either use Logistic or MSE loss for the heatmap regression (*setup in pipeline/constants.py*)
+- Model naming convention: *LossFunc_ModelName_dataType.pth* (i.e *Logistic_CenterNet_fused.pth* or *Logistic_CenterNet_depth.pth*)
+```bash
+python3 train # To start training a model from scratch
+
+python3 train -r True # To continue an already trained model
+```
