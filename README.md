@@ -98,13 +98,29 @@ Having the dataset ready We need to train the model (it is recomended to collect
 
 ### 1. setup training parameters
 - **CHECKPOINT_PATH** the path to save the model checkpoints (default *PATH/TO/PROJ/checkpoint)
-- You can set the to either train with only depth images or with ir and depth fused images (*setup in pipeline/constants.py*)
+- you can set the to either train with only depth images or with ir and depth fused images (*setup in pipeline/constants.py*)
   - depth input images: image size (3, 300, 300) dublicate the image for all the 3 input channels 
   - fused input images: channel1 ir images, channel 2 depth image, channel 3 mean of the first 2 channels
 - loss functions: you can either use Logistic or MSE loss for the heatmap regression (*setup in pipeline/constants.py*)
+- setup max epoch in pipeline/constants.py*
 - Model naming convention: *LossFunc_ModelName_dataType.pth* (i.e *Logistic_CenterNet_fused.pth* or *Logistic_CenterNet_depth.pth*)
+
+### 2. train
+run training by
 ```bash
 python3 train # To start training a model from scratch
 
 python3 train -r True # To continue an already trained model
 ```
+### 3. visualize from checkpoint
+run training by
+```bash
+python3 visualization.py # To run inference on a validation image
+```
+
+### 4. run real time inference
+run training by
+```bash
+python3 azure_kinect.py # To run real time inference
+```
+
