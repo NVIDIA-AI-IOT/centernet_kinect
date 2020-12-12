@@ -4,7 +4,9 @@ This repository demonstrates how to set up [**Azure Kinect** camera](https://azu
 
 * [Install Sensor SDK on Jetson](#install_sensor_sdk)
 * [Collect/Annotate Data](#collect_annotate_data)
-  * [Example Subsection](#example_subsection)
+  * [Data collection](#data_collection)
+  * [Annotate data](#data_annotation)
+* [Train Model](#train_model)
 
 <a name="install_sensor_sdk"></a>
 ## Install Sensor SDK on Jetson
@@ -50,6 +52,7 @@ k4aviewer
 ## Collect/Annotate Data
 
 We will discuss data collection and annotation in this section<br/>
+<a name="data_collection"></a>
 ### 1. Data collection
 - Setup **JSON_ANNOTATION_PATH** and **SAVE_DATASET_PATH** in *pipeline/constants.py* file 
   - **SAVE_DATASET_PATH** setups the location to save the dataset. here is how the dataset directory hierarchy is setup
@@ -61,15 +64,16 @@ We will discuss data collection and annotation in this section<br/>
     ├── ir_image
     └── rgb_image
   ```
-  - **JSON_ANNOTATION_PATH** setups the location to store the annotation json files to train the model.
+  - **JSON_ANNOTATION_PATH** setups the location to store the annotation json files to train the model (i.e train.json, val.json)
+  these files will be created after parsing the annotation (.xml) files 
   ```bash
   {"img_path": "/path/to/image.png",
   "chw": [1, 576, 640],
   "boxes": [[345, 191, 384, 235], [424, 185, 467, 223], [309, 401, 341, 430], [152, 430, 198, 483]],
   "labels": [1, 1, 1, 1]}
   ```
-
-### 2.Annotate data
+<a name="data_annotation"></a>
+### 2. Annotate data
 - We used [labelImg](https://pypi.org/project/labelImg/) to annotate out dataset. you can install and run by running teh follwoing command
 ```bash
 pip install labelImg
@@ -80,8 +84,10 @@ labelImg
 <img src="reame_files/lableImg.png" alt="landing graphic" height="200px"/>
 </p>
 
-- When finished with annotating the data run *parse_pascal.py* to create 
+- When finished with annotating the data you need to parse the Pascal VOC format and create json files containging annoation information. run *parse_pascal.py* to create 
   - label_map.json
   - train.json
   - val.json
-  
+
+<a name="train_model"></a>
+## Train Model
