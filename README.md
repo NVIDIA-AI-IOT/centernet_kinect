@@ -123,4 +123,3 @@ run training by
 ```bash
 python3 azure_kinect.py # To run real time inference
 ```
-
