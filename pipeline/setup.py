@@ -26,7 +26,7 @@ class ModelSetup(object):
         "fused": FusedProjDataLoader,
     }
 
-    def __init__(self, dataset_path=const.DATASET_PATH, json_annotation_path=const.JSON_ANNOTATION_PATH,\
+    def __init__(self, json_annotation_path=const.JSON_ANNOTATION_PATH,\
                     ir_img_dir_path=const.IR_IMG_DIR_PATH, depth_img_dir_path=const.DEPTH_IMG_DIR_PATH,\
                     num_classes=const.NUM_CLASSES, load=None, pretrained=True, batch_size=const.BATCH_SIZE,\
                     checkpoint_dir=const.CHECKPOINT_PATH, infer=False):
@@ -35,7 +35,6 @@ class ModelSetup(object):
             exit(-1)
             
         print("Setting up model...")
-        self.dataset_path = dataset_path
         self.json_annotation_path = json_annotation_path
         self.ir_img_dir_path = ir_img_dir_path
         self.depth_img_dir_path = depth_img_dir_path
@@ -55,7 +54,6 @@ class ModelSetup(object):
             self.model = Resnet18FeatureExtractor(num_classes=self.num_classes)
             self.model.load_state_dict(checkpoint["model"])
             self.optim = torch.optim.Adam(self.model.parameters(), lr=const.LEARNING_RATE, weight_decay=const.WEIGHT_DECAY)
-            # self.optim = torch.optim.Adam(self.model.parameters(), lr=const.LEARNING_RATE)
             self.optim.load_state_dict(checkpoint["optim"])
 
             if torch.cuda.is_available():
@@ -72,14 +70,13 @@ class ModelSetup(object):
             self.num_classes = num_classes
             self.model = Resnet18FeatureExtractor(num_classes=self.num_classes, pretrained=pretrained)
             self.optim = torch.optim.Adam(self.model.parameters(), lr=const.LEARNING_RATE, weight_decay=const.WEIGHT_DECAY)
-            # self.optim = torch.optim.Adam(self.model.parameters(), lr=const.LEARNING_RATE)
             print("Finished creaing model!")
         
         self.criterion = Criterion
 
         model_data_loader = self.model_data_loader_switcher[const.DATA_LOADER]
 
-        load_train = model_data_loader(dataset_path=self.dataset_path,
+        load_train = model_data_loader(
                             json_annotation_path=self.json_annotation_path,
                             train=True,
                             ir_img_dir_path=self.ir_img_dir_path,
@@ -92,7 +89,7 @@ class ModelSetup(object):
             pin_memory=True,   
         )
 
-        load_valid = model_data_loader(dataset_path=self.dataset_path,
+        load_valid = model_data_loader(
                             json_annotation_path=self.json_annotation_path,
                             train=False,
                             ir_img_dir_path=self.ir_img_dir_path,
@@ -112,7 +109,6 @@ class ModelSetup(object):
         if not os.path.isdir(save_path):
             os.mkdir(save_path)
         
-        # save_path = os.path.join(save_path, f"{self.model_name}_{self.input_format}.pth")
         save_path = os.path.join(save_path, f"{self.loss}_{self.model_name}_{self.input_format}.pth")
 
         torch.save(dict(

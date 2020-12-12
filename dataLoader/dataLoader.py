@@ -22,7 +22,7 @@ class ProjDataLoader(Dataset):
 
     Create HeatMaps for each input depth image from the given bouning box
     """
-    def __init__(self, dataset_path=const.DATASET_PATH, json_annotation_path=const.JSON_ANNOTATION_PATH, train=True,\
+    def __init__(self, json_annotation_path=const.JSON_ANNOTATION_PATH, train=True,\
                     ir_img_dir_path=const.IR_IMG_DIR_PATH, depth_img_dir_path=const.DEPTH_IMG_DIR_PATH):
         """
         Class Constructor
@@ -30,13 +30,9 @@ class ProjDataLoader(Dataset):
         :param dataset_path: str, full path to dataset location
         :param json_annotation_path: str, full path to json annotation directory
         """
-        self.dataset_path = dataset_path
         self.ir_img_dir_path = ir_img_dir_path
         self.depth_img_dir_path = depth_img_dir_path
         self.train = train
-
-        self.ir_path = os.path.join(dataset_path, "data/depth_image")
-        # self.ir_path = os.path.join(dataset_path, "data/ir_image")
 
         if train:
             self.annotaion_path = os.path.join(json_annotation_path, "train.json")

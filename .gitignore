@@ -5,7 +5,10 @@
 *__pycache__*
 
 # ignore data images
-annotation_json/*.png
+annotation_json/data
 
 # ignore virtual enviornment
 venv*
+
+# ignore the json files
+*.json
