@@ -118,7 +118,7 @@ run training by
 python3 visualization.py # To run inference on a validation image
 ```
 <p align="center">
-<img src="reame_files/visulization.png" alt="landing graphic" height="500px"/>
+<img src="reame_files/visulization.png" alt="landing graphic" height="600px"/>
 </p>
 
 
