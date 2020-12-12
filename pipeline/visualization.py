@@ -76,7 +76,7 @@ def draw_images(model_setup: ModelSetup, image: torch.tensor, ground_truth: torc
 
     pred_bboxes = get_bboxes(pred_yx_locations, pred_height, pred_width, pred_offset_x, pred_offset_y)    
 
-    fig = plt.figure(figsize=(6, 8))
+    fig = plt.figure(figsize=(6, 11))
     ax1 = fig.add_subplot(3, 1, 1)
     ax2 = fig.add_subplot(3, 1, 2)
     ax3 = fig.add_subplot(3, 1, 3)
@@ -96,12 +96,15 @@ def draw_images(model_setup: ModelSetup, image: torch.tensor, ground_truth: torc
 
     ax1_img = image
     ax1.imshow(ax1_img, interpolation='nearest', cmap ='gray')
+    ax1.set_title('IR Image')
 
     ax2_img = gt_heatmap.numpy()
     ax2.imshow(ax2_img, interpolation='nearest', cmap ='gray')
+    ax2.set_title('Ground Truth Mask')
 
     ax3_img = pred_heatmap.cpu().numpy()
     ax3.imshow(ax3_img, interpolation='nearest', cmap ='gray')
+    ax3.set_title('Prediction Mask')
 
     plt.show()
 
