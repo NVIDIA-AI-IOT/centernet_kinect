@@ -164,14 +164,12 @@ def distort_image(depth_image: np.array, ir_image: np.array):
         adjust_factor_ir = random.uniform(min_val, max_val)
         
         return np.clip(adjust_factor_depth * depth_image, 0, 65535).astype(np.uint16),\
-                    np.clip(adjust_factor_ir * ir_image, 0, 255).astype(np.uint8)
-                    # np.clip(adjust_factor_ir * ir_image, 0, 65535).astype(np.uint16)
+                    np.clip(adjust_factor_ir * ir_image, 0, 65535).astype(np.uint16)
         
     def adjust_brightness(depth_image: np.array, ir_image: np.array):
         adjust_factor = random.randint(-100, 900)
         return np.clip(depth_image + adjust_factor , 0, 65535).astype(np.uint16),\
-                    np.clip(ir_image + -1*adjust_factor/10 , 0, 255).astype(np.uint8)
-                    # np.clip(ir_image + -1*adjust_factor/5 , 0, 65535).astype(np.uint16)
+                    np.clip(ir_image + -1*adjust_factor/5 , 0, 65535).astype(np.uint16)
 
     depth_image, ir_image = adjust_contrast(depth_image, ir_image)
     depth_image, ir_image = adjust_brightness(depth_image, ir_image)
@@ -200,7 +198,7 @@ def random_magnification(depth_image: np.array, ir_image: np.array, boxes: np.ar
         ir_factor = (depth_factor_normalized * (const.MAX_IR_MAGNIFICATION - 0.9)) + 0.9
         min_val = min(1/ir_factor, ir_factor)
         max_val = max(1/ir_factor, ir_factor)
-        adjust_factor_ir = random.uniform(min_val, max_val)
+        ir_factor = random.uniform(min_val, max_val)
 
         xmin = int(box[0])
         ymin = int(box[1])

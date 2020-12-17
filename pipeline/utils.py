@@ -37,7 +37,7 @@ def get_model():
     this functions loos into that directory and returns the path to the model.
     """
     model_path = const.CHECKPOINT_PATH
-    models = glob(f"{model_path}/{const.LOSS}_{const.MODEL_NAME}_{const.DATA_LOADER}.pth")
+    models = glob(f"{model_path}/Hold1_{const.LOSS}_{const.MODEL_NAME}_{const.DATA_LOADER}.pth")
     if not models:
         print(f"\nThere are not check points at:\
                 \n{model_path}\
@@ -86,7 +86,7 @@ def get_bboxes(yx_locations: torch.tensor, height: torch.tensor, width: torch.te
         
         return bboxes
 
-def find_prediction_mask(pred_heatmap: torch.tensor, window_size=11, threshold=0.3):
+def find_prediction_mask(pred_heatmap: torch.tensor, window_size=11, threshold=0.4):
     """
     Find the mask of a giver heatmap, Have this in mind the follwoing heatmap might not have values as larg as
     1, and we need to fins the local maximas of the heatmap.

@@ -171,9 +171,9 @@ def run_camera_inferance(model_setup: ModelSetup, iterations=1000):
         # ir_img[ir_img > 10000] = ir_img.mean()
 
         # Take this out just to test with PIL
-        ir_img = Image.fromarray(ir_img)
-        ir_img = ImageOps.grayscale(ir_img)
-        ir_img = np.array(ir_img)
+        # ir_img = Image.fromarray(ir_img)
+        # ir_img = ImageOps.grayscale(ir_img)
+        # ir_img = np.array(ir_img)
         # End here
 
         w, h = ir_img.shape[1], ir_img.shape[0]
@@ -202,7 +202,7 @@ def run_camera_inferance(model_setup: ModelSetup, iterations=1000):
             ax1.add_patch(rect)
             ax1.text(x, y, str(get_depth(depth_img, pred_box)), fontsize=14, bbox=props)
 
-
+        ir_img[ir_img > 4000] = ir_img.mean()
         ir_img = cv2.resize(ir_img, const.IMG_SHAPE, interpolation=cv2.INTER_NEAREST)
         ax1.imshow(ir_img, interpolation='nearest', cmap ='gray')
 

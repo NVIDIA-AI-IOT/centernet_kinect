@@ -83,7 +83,7 @@ labelImg
 ```
 - Open the *DATASETPATH/data/casted_ir_image* directory to load images and set the *Save Dir* to *DATASETPATH/data/annotation* and start annotating
 <p align="center">
-<img src="reame_files/lableImg.png" alt="landing graphic" height="300px"/>
+<img src="readme_files/lableImg.png" alt="landing graphic" height="300px"/>
 </p>
 
 - When finished with annotating the data you need to parse the Pascal VOC format and create json files containging annoation information. run *pipeline/parse_pascal.py* to create 
@@ -118,7 +118,7 @@ run training by
 python3 visualization.py # To run inference on a validation image
 ```
 <p align="center">
-<img src="reame_files/visulization.png" alt="landing graphic" height="600px"/>
+<img src="readme_files/visulization.png" alt="landing graphic" height="600px"/>
 </p>
 
 
