@@ -5,6 +5,7 @@ import json
 import torch
 import numpy as np
 
+from PIL import Image, ImageOps
 from torch.utils.data import Dataset
 
 # Adding Project Path
@@ -61,7 +62,10 @@ class FusedProjDataLoader(Dataset):
         bboxes = np.array(img_annotation["boxes"], dtype=np.float32) # Boxes need to be casted into Numpy Float Array
         labels = np.array(img_annotation["labels"], dtype=np.long) # Labels need to be casted into torch Long tensor
         depth_image = cv2.imread(depth_img_path, cv2.COLOR_BGR2GRAY).astype(np.uint16) # 16 bit unsigned integer values for an IR Image (H, W)
-        ir_image = cv2.imread(ir_img_path, cv2.COLOR_BGR2GRAY).astype(np.uint16) # 16 bit unsigned integer values for an IR Image (H, W)
+        # ir_image = cv2.imread(ir_img_path, cv2.COLOR_BGR2GRAY).astype(np.uint16) # 16 bit unsigned integer values for an IR Image (H, W)
+        ir_image = Image.open(ir_img_path)
+        ir_image = ImageOps.grayscale(ir_image) # Images Need to be of type PIL before passing to transfomation func
+        ir_image = np.array(ir_image)
 
         new_depth_image, new_ir_image, new_boxes, new_labels = Transform(depth_image, ir_image, bboxes, labels, self.train)
         new_depth_image, new_ir_image, output_tensor, new_boxes = CreateHeatMap(new_depth_image, new_ir_image, new_boxes, new_labels)

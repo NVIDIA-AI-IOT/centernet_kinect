@@ -58,9 +58,9 @@ def Run_Model(model_setup: ModelSetup, train: bool):
             end_time = time.time()
             total_time.update(end_time - start_time)
 
-            print(f"Epoch: {model_setup.epoch} [{i}/{len(dataset)}]\t"\
+            print(f"=== Epoch: {model_setup.epoch} [{i}/{len(dataset)}]\t"\
                     f"Loss: {losses.avg:1.3f}\t"\
-                    f"Time: {end_time - start_time:1.3f}\t")
+                    f"Time: {end_time - start_time:1.3f} ===")
             start_time = time.time()
         
         del preds, images, ground_truths, loss

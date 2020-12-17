@@ -43,16 +43,18 @@ def main():
 
         train_res = Run_Model(model_setup, True)
         
-        print(f"Epoch: {epoch}\t"\
+        print(f"Train Epoch: {epoch}\t"\
             f"Loss: {train_res['loss']:1.3f}\t"\
             f"Time: {train_res['time']:1.3f}\t")
         
-        if ((epoch+1)%const.SAVE_FREQ == 0):
-            valid_res = Run_Model(model_setup, False)
 
-            print(f"Vaidation Epoch: {epoch}\t"\
-                f"Vaidation Loss: {valid_res['loss']:1.3f}\t"\
-                f"Vaidation Time: {valid_res['time']:1.3f}\t")
+        valid_res = Run_Model(model_setup, False)
+
+        print(f"Vaidation Epoch: {epoch}\t"\
+            f"Vaidation Loss: {valid_res['loss']:1.3f}\t"\
+            f"Vaidation Time: {valid_res['time']:1.3f}\t")
+        
+        if ((epoch+1)%const.SAVE_FREQ == 0):
             model_setup.save()
     
     model_setup.save()

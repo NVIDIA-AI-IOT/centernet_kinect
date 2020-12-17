@@ -9,6 +9,7 @@ import matplotlib.patches as patches
 
 from glob import glob
 from pyk4a import PyK4A
+from PIL import Image, ImageOps
 # PROJ ROOT DIR
 DIR_PATH = os.path.dirname(os.path.abspath(__file__))
 ROOT_PATH = os.path.join(DIR_PATH, os.path.pardir)
@@ -158,7 +159,13 @@ def run_camera_inferance(model_setup: ModelSetup, iterations=1000):
         ir_img = capture.ir
         depth_img = capture.depth
 
-        ir_img[ir_img > 10000] = ir_img.mean()
+        # ir_img[ir_img > 10000] = ir_img.mean()
+
+        # Take this out just to test with PIL
+        ir_img = Image.fromarray(ir_img)
+        ir_img = ImageOps.grayscale(ir_img)
+        ir_img = np.array(ir_img)
+        # End here
 
         w, h = ir_img.shape[1], ir_img.shape[0]
         transformed_image = input_image(depth_img, ir_img, const.IMG_SHAPE, model_setup.input_format)
