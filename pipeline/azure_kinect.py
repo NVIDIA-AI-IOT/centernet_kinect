@@ -154,8 +154,7 @@ def run_camera_inferance(model_setup: ModelSetup, iterations=1000):
     fig = plt.figure(figsize=(8, 10))
     ax1 = fig.add_subplot(3, 1, 1)
     ax2 = fig.add_subplot(3, 1, 2)
-    # ax3 = fig.add_subplot(3, 2, 1)
-    ax4 = fig.add_subplot(3, 1, 3)
+    ax3 = fig.add_subplot(3, 1, 3)
 
     # Load camera with default config
     k4a = PyK4A()
@@ -167,14 +166,6 @@ def run_camera_inferance(model_setup: ModelSetup, iterations=1000):
         capture = k4a.get_capture()
         ir_img = capture.ir
         depth_img = capture.depth
-
-        # ir_img[ir_img > 10000] = ir_img.mean()
-
-        # Take this out just to test with PIL
-        # ir_img = Image.fromarray(ir_img)
-        # ir_img = ImageOps.grayscale(ir_img)
-        # ir_img = np.array(ir_img)
-        # End here
 
         w, h = ir_img.shape[1], ir_img.shape[0]
         transformed_image = input_image(depth_img, ir_img, const.IMG_SHAPE, model_setup.input_format)
@@ -202,24 +193,24 @@ def run_camera_inferance(model_setup: ModelSetup, iterations=1000):
             ax1.add_patch(rect)
             ax1.text(x, y, str(get_depth(depth_img, pred_box)), fontsize=14, bbox=props)
 
-        ir_img[ir_img > 4000] = ir_img.mean()
+        # For visualizing purposes 
+        ir_img[ir_img > 3000] = ir_img.mean()
         ir_img = cv2.resize(ir_img, const.IMG_SHAPE, interpolation=cv2.INTER_NEAREST)
+        ax1.set_title('IR Image')
         ax1.imshow(ir_img, interpolation='nearest', cmap ='gray')
 
+        ax2.set_title('prediction Heatmap')
         ax2.imshow(pred_heatmap.cpu().numpy(), interpolation='nearest', cmap ='gray')
 
-        mask = get_mask(depth_img, pred_bboxes)
-        # ax3.imshow(mask)
-
-        ax4.imshow(pred_mask.float().cpu().numpy(), interpolation='nearest', cmap ='gray')
+        ax3.set_title('prediction Mask')
+        ax3.imshow(pred_mask.float().cpu().numpy(), interpolation='nearest', cmap ='gray')
 
         plt.draw()
         plt.pause(0.001)
 
         ax1.clear()
         ax2.clear()
-        # ax3.clear()
-        ax4.clear()
+        ax3.clear()
 
         # del rect, capture, prediction
 
