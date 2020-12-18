@@ -8,6 +8,7 @@ This repository demonstrates how to set up [**Azure Kinect** camera](https://azu
   * [Annotate data](#data_annotation)
 * [Train Model](#train_model)
 
+![](readme_files/test1.gif)
 <a name="install_sensor_sdk"></a>
 ## Install Sensor SDK on Jetson
 
