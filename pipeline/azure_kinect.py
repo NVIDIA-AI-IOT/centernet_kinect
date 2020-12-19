@@ -44,6 +44,16 @@ def parse_arguments():
                         type=str,
                         default=None,
                         help="Set the full path to your trained model")
+    
+    parser.add_argument('-n', '--num_of_frames',
+                        type=int,
+                        default=1000,
+                        help="Set the number of frames to run the camera")
+
+    parser.add_argument('-v', '--visualize_heatmap',
+                        type=bool,
+                        default=False,
+                        help="Set to true to visualize heatmapa and mask")
 
     args = parser.parse_args()
     return args
@@ -145,18 +155,33 @@ def get_mask(depth_img: np.array, bboxs: list, img_shape=const.IMG_SHAPE, depth_
     mask[np.where(mask > 0.1)] = 1
     return mask
 
-def run_camera_inferance(model_setup: ModelSetup, iterations=1000):
+def run_camera_inferance(model_setup: ModelSetup, iterations=1000, show_heatmap=False):
     """
     Run the model for N number of frames
 
     :param model_setup: ModelSetup
     :param iterations: the total number of frames to run the model
+    :param show_heatmap: set to visualize prediction heat map and mask
     """
-    fig = plt.figure(figsize=(4, 5))
-    ax1 = fig.add_subplot(1, 1, 1)
-    # ax1 = fig.add_subplot(3, 1, 1)
-    # ax2 = fig.add_subplot(3, 1, 2)
-    # ax3 = fig.add_subplot(3, 1, 3)
+    if show_heatmap:
+        fig = plt.figure(figsize=(6, 7))
+        
+        ax1 = fig.add_subplot(3, 1, 1)
+        ax1.get_xaxis().set_ticks([])
+        ax1.get_yaxis().set_ticks([])
+        ax2 = fig.add_subplot(3, 1, 2)
+        ax2.get_xaxis().set_ticks([])
+        ax2.get_yaxis().set_ticks([])
+        ax3 = fig.add_subplot(3, 1, 3)
+        ax3.get_xaxis().set_ticks([])
+        ax3.get_yaxis().set_ticks([])
+    else:
+        fig = plt.figure(figsize=(4, 5))
+
+        ax1 = fig.add_subplot(1, 1, 1)
+        ax1.get_xaxis().set_ticks([])
+        ax1.get_yaxis().set_ticks([])
+
 
     # Load camera with default config
     k4a = PyK4A()
@@ -191,6 +216,7 @@ def run_camera_inferance(model_setup: ModelSetup, iterations=1000):
 
         pred_bboxes = get_bboxes(pred_yx_locations, pred_height, pred_width, pred_offset_x, pred_offset_y)    
 
+        rect = None
         for pred_box in pred_bboxes:
             x, y = pred_box[0], pred_box[1]
             width, height = pred_box[2], pred_box[3]
@@ -202,22 +228,33 @@ def run_camera_inferance(model_setup: ModelSetup, iterations=1000):
         ir_img[ir_img > 3000] = ir_img.mean()
         ir_img = cv2.resize(ir_img, const.IMG_SHAPE, interpolation=cv2.INTER_NEAREST)
         ax1.set_title('IR Image')
+        ax1.get_xaxis().set_ticks([])
+        ax1.get_yaxis().set_ticks([])
         ax1.imshow(ir_img, interpolation='nearest', cmap ='gray')
 
-        # ax2.set_title('prediction Heatmap')
-        # ax2.imshow(pred_heatmap.cpu().numpy(), interpolation='nearest', cmap ='gray')
+        if show_heatmap:
+            ax2.get_xaxis().set_ticks([])
+            ax2.get_yaxis().set_ticks([])
+            ax2.set_title('prediction Heatmap')
+            ax2.imshow(pred_heatmap.cpu().numpy(), interpolation='nearest', cmap ='gray')
 
-        # ax3.set_title('prediction Mask')
-        # ax3.imshow(pred_mask.float().cpu().numpy(), interpolation='nearest', cmap ='gray')
+            ax3.set_title('prediction Mask')
+            ax3.get_xaxis().set_ticks([])
+            ax3.get_yaxis().set_ticks([])
+            ax3.imshow(pred_mask.float().cpu().numpy(), interpolation='nearest', cmap ='gray')
 
         plt.draw()
         plt.pause(0.001)
 
         ax1.clear()
-        # ax2.clear()
-        # ax3.clear()
-
-        # del rect, capture, prediction
+        if show_heatmap:
+            ax2.clear()
+            ax3.clear()
+        if rect:
+            del rect, capture, prediction
+        else:
+            del capture, prediction
+            
 
 def main():
     args = parse_arguments()
@@ -226,7 +263,7 @@ def main():
     else:
         model_setup = ModelSetup(load=get_model(), infer=True)
     
-    run_camera_inferance(model_setup)
+    run_camera_inferance(model_setup, iterations=args.num_of_frames, show_heatmap=args.visualize_heatmap)
 
 if __name__ == "__main__":
     main()

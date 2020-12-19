@@ -4,6 +4,7 @@ This repository demonstrates how to set up [**Azure Kinect** camera](https://azu
 
 * [Install Sensor SDK on Jetson](#install_sensor_sdk)
   * [Install python packages](#install_python_packages)
+  * [Get pretrained weights](#get_pre_trained_weights)
 * [Collect/Annotate Data](#collect_annotate_data)
   * [Data collection](#data_collection)
   * [Annotate data](#data_annotation)
@@ -81,6 +82,15 @@ pip3 install 'pillow<7' # always needed for Python 2.7, not needed torchvision v
 ```bash
 pip3 install -r requirments.txt
 ```
+
+<a name="get_pre_trained_weights"></a>
+## Get pretrained weights
+
+- get the pretrained weight from the following [link](https://drive.google.com/file/d/19a0ooi8GI-vxm5cAXvCS7O_5ylOeuR0g/view?usp=sharing) and place the file in:
+```bash
+cp DOWNLOADED_WEIGHTS PATH/TO/PROJECT/checkpoint/Logistic_ResnetCenterNet_fused.pth
+```
+
 <a name="collect_annotate_data"></a>
 ## Collect/Annotate Data
 
