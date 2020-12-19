@@ -3,6 +3,7 @@
 This repository demonstrates how to set up [**Azure Kinect** camera](https://azure.microsoft.com/en-us/services/kinect-dk/) with your Jetson platform, collect and annotate data, train a object ddetection model with the collected data, and finally run a real time object detection model on your development kit. <br/>
 
 * [Install Sensor SDK on Jetson](#install_sensor_sdk)
+  * [Install python packages](#install_python_packages)
 * [Collect/Annotate Data](#collect_annotate_data)
   * [Data collection](#data_collection)
   * [Annotate data](#data_annotation)
@@ -51,6 +52,35 @@ k4aviewer
 
 **Note** Here are more instuctions if you were experiencing dificulty with yout setup [Link](https://gist.github.com/madelinegannon/c212dbf24fc42c1f36776342754d81bc#updating-firmware-for-azure-kinect)
 
+<a name="install_python_packages"></a>
+## Install python packages
+
+- install python pip
+```bash
+sudo apt update
+sudo apt-get install python3-pip
+```
+- install torch 1.7.0. Here is the [Link](https://forums.developer.nvidia.com/t/pytorch-for-jetson-version-1-7-0-now-available/72048) to choose the correct versions.
+```bash
+wget https://nvidia.box.com/shared/static/wa34qwrwtk9njtyarwt5nvo6imenfy26.whl -O torch-1.7.0-cp36-cp36m-linux_aarch64.whl
+sudo apt-get install python3-pip libopenblas-base libopenmpi-dev 
+pip3 install Cython
+pip3 install numpy torch-1.7.0-cp36-cp36m-linux_aarch64.whl
+```
+- install torch vision 0.8.1
+```bash
+sudo apt-get install libjpeg-dev zlib1g-dev libpython3-dev libavcodec-dev libavformat-dev libswscale-dev
+git clone --branch v0.8.1 https://github.com/pytorch/vision torchvision
+cd torchvision
+export BUILD_VERSION=0.8.1  # where 0.8.1 is the torchvision version  
+sudo python3 setup.py install
+cd ../  # attempting to load torchvision from build dir will result in import error
+pip3 install 'pillow<7' # always needed for Python 2.7, not needed torchvision v0.5.0+ with Python 3.6
+```
+- install requirments
+```bash
+pip3 install -r requirments.txt
+```
 <a name="collect_annotate_data"></a>
 ## Collect/Annotate Data
 

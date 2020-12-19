@@ -27,7 +27,9 @@ IR_IMG_DIR_PATH = os.path.join(SAVE_DATASET_PATH, "ir_image")
 DEPTH_IMG_DIR_PATH = os.path.join(SAVE_DATASET_PATH, "depth_image")
 
 # Setup the checkpoint path
-CHECKPOINT_PATH = "/home/analog/Desktop/NVIDIA/CenterNet/checkpoint"
+CHECKPOINT_PATH = ""
+CHECKPOINT_PATH = os.path.join(PROJ_PATH, "checkpoint") if not CHECKPOINT_PATH else CHECKPOINT_PATH # Default path is not setup
+
 MODEL_NAME = "ResnetCenterNet"
 
 # Setup the data to be used for training (Depth images/ fusion of IR and Depth images)

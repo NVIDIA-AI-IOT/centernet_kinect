@@ -12,3 +12,9 @@ venv*
 
 # ignore the json files
 *.json
+
+# ignore pyhton whl files
+*.whl
+
+# ignore torchvision
+*torchvision*

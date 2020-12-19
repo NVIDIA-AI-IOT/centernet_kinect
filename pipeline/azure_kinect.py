@@ -10,6 +10,7 @@ THE SOFTWARE IS PROVIDED "AS IS", WITHOUT WARRANTY OF ANY KIND, EXPRESS OR IMPLI
 import os
 import sys
 import cv2
+import time
 import torch
 import argparse
 import numpy as np
@@ -151,10 +152,11 @@ def run_camera_inferance(model_setup: ModelSetup, iterations=1000):
     :param model_setup: ModelSetup
     :param iterations: the total number of frames to run the model
     """
-    fig = plt.figure(figsize=(8, 10))
-    ax1 = fig.add_subplot(3, 1, 1)
-    ax2 = fig.add_subplot(3, 1, 2)
-    ax3 = fig.add_subplot(3, 1, 3)
+    fig = plt.figure(figsize=(4, 5))
+    ax1 = fig.add_subplot(1, 1, 1)
+    # ax1 = fig.add_subplot(3, 1, 1)
+    # ax2 = fig.add_subplot(3, 1, 2)
+    # ax3 = fig.add_subplot(3, 1, 3)
 
     # Load camera with default config
     k4a = PyK4A()
@@ -172,7 +174,10 @@ def run_camera_inferance(model_setup: ModelSetup, iterations=1000):
 
 
         # Run Infrence
+        t1 = time.time()
         prediction = Run_Inference(model_setup, transformed_image)
+        t2 = time.time()
+        print(f"infrence time: {t2-t1:1.3f}")
 
         pred_heatmap = prediction[0][0:model_setup.num_classes].max(0)[0].float()
         pred_mask = find_prediction_mask(pred_heatmap)[0][0]
@@ -199,18 +204,18 @@ def run_camera_inferance(model_setup: ModelSetup, iterations=1000):
         ax1.set_title('IR Image')
         ax1.imshow(ir_img, interpolation='nearest', cmap ='gray')
 
-        ax2.set_title('prediction Heatmap')
-        ax2.imshow(pred_heatmap.cpu().numpy(), interpolation='nearest', cmap ='gray')
+        # ax2.set_title('prediction Heatmap')
+        # ax2.imshow(pred_heatmap.cpu().numpy(), interpolation='nearest', cmap ='gray')
 
-        ax3.set_title('prediction Mask')
-        ax3.imshow(pred_mask.float().cpu().numpy(), interpolation='nearest', cmap ='gray')
+        # ax3.set_title('prediction Mask')
+        # ax3.imshow(pred_mask.float().cpu().numpy(), interpolation='nearest', cmap ='gray')
 
         plt.draw()
         plt.pause(0.001)
 
         ax1.clear()
-        ax2.clear()
-        ax3.clear()
+        # ax2.clear()
+        # ax3.clear()
 
         # del rect, capture, prediction
 
