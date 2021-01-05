@@ -70,6 +70,6 @@ class Resnet18FeatureExtractor(nn.Module):
         out = self.up_sample3(torch.cat([x2, out], 1))
         out = self.up_sample4(torch.cat([x1, out], 1))
 
-        out[:,0:self.num_classes] = self.sigmoid(out[:,0:self.num_classes])
+        out = torch.cat([self.sigmoid(out[:,0:self.num_classes]), out[:, self.num_classes:]], dim=1)
         
         return out
