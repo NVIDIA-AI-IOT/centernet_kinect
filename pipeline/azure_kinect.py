@@ -55,6 +55,11 @@ def parse_arguments():
                         default=False,
                         help="Set to true to visualize heatmapa and mask")
 
+    parser.add_argument('-t', '--trt',
+                        type=bool,
+                        default=False,
+                        help="Set to True for trt optimization")
+
     args = parser.parse_args()
     return args
 
@@ -155,7 +160,7 @@ def get_mask(depth_img: np.array, bboxs: list, img_shape=const.IMG_SHAPE, depth_
     mask[np.where(mask > 0.1)] = 1
     return mask
 
-def run_camera_inferance(model_setup: ModelSetup, iterations=1000, show_heatmap=False):
+def run_camera_inferance(model_setup: ModelSetup, iterations=1000, show_heatmap=False, trt_optim=False):
     """
     Run the model for N number of frames
 
@@ -163,6 +168,21 @@ def run_camera_inferance(model_setup: ModelSetup, iterations=1000, show_heatmap=
     :param iterations: the total number of frames to run the model
     :param show_heatmap: set to visualize prediction heat map and mask
     """
+    if trt_optim:
+        from torch2trt import torch2trt, TRTModule
+        trt_model_path = os.path.join(const.CHECKPOINT_PATH, f"{model_setup.loss}_{model_setup.model_name}_{model_setup.input_format}.trt")
+        if not os.path.exists(trt_model_path):
+            print("Creating TRT Model...")
+            x = torch.ones((1, 3, const.IMG_SHAPE[0], const.IMG_SHAPE[1])).cuda()
+            model_trt = torch2trt(model_setup.model.eval().cuda(), [x], fp16_mode=True)
+            torch.save(model_trt.state_dict(), trt_model_path)
+            print(f"TRT Model saved at:\n {trt_model_path}\n")
+        else:
+            print("Loading TRT Model...")
+            model_trt = TRTModule()
+            model_trt.load_state_dict(torch.load(trt_model_path))  
+            print("TRT Model loaded!\n")
+
     if show_heatmap:
         fig = plt.figure(figsize=(6, 7))
         
@@ -200,7 +220,10 @@ def run_camera_inferance(model_setup: ModelSetup, iterations=1000, show_heatmap=
 
         # Run Infrence
         t1 = time.time()
-        prediction = Run_Inference(model_setup, transformed_image)
+        if trt_optim:
+            prediction = model_trt(transformed_image.cuda())
+        else:
+            prediction = Run_Inference(model_setup, transformed_image)
         t2 = time.time()
         print(f"infrence time: {t2-t1:1.3f}")
 
@@ -263,7 +286,7 @@ def main():
     else:
         model_setup = ModelSetup(load=get_model(), infer=True)
     
-    run_camera_inferance(model_setup, iterations=args.num_of_frames, show_heatmap=args.visualize_heatmap)
+    run_camera_inferance(model_setup, iterations=args.num_of_frames, show_heatmap=args.visualize_heatmap, trt_optim=args.trt)
 
 if __name__ == "__main__":
     main()

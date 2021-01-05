@@ -1,5 +1,6 @@
 # ignore pushing the pytoch saved model
 *.pth
+*.trt
 
 # igont the python cache files
 *__pycache__*

@@ -13,6 +13,7 @@ This repository demonstrates how to set up [**Azure Kinect** camera](https://azu
 <p align="center">
 <img src="readme_files/test1.gif" alt="landing graphic" height="600px"/>
 </p>
+
 <a name="install_sensor_sdk"></a>
 ## Install Sensor SDK on Jetson
 
@@ -80,8 +81,12 @@ pip3 install 'pillow<7' # always needed for Python 2.7, not needed torchvision v
 ```
 - install requirments
 ```bash
+# Make sure to install Protobuf compiler before running pip installation of onnx
+sudo apt-get install protobuf-compiler libprotoc-dev
+
 pip3 install -r requirments.txt
 ```
+- install torch2trt for compiling the tensorrt model, here is a [Link](https://github.com/NVIDIA-AI-IOT/torch2trt/tree/2b1827eeb153761e773b0770b56364cda564a362)
 
 <a name="get_pre_trained_weights"></a>
 ## Get pretrained weights

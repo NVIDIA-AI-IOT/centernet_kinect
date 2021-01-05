@@ -1,2 +1,5 @@
 pyk4a
 matplotlib
+pycuda
+pybind11
+onnx
